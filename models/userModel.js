@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre('save', async function () {
-  // console.log('incoming data', this);
   const password = await bcrypt.hash(this.password, 13);
-  // console.log(password);
   this.password = password;
+
+  if (this.isNew) this.createdAt = new Date();
 });
 
 const User = mongoose.model('User', userSchema);

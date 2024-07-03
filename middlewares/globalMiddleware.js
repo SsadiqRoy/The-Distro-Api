@@ -5,6 +5,8 @@ const User = require('../models/userModel');
 const { catchAsync } = require('../utilities/utitlities');
 const multer = require('multer');
 const AppError = require('../classes/AppError');
+const { allModels } = require('../utilities/supportControllers');
+// const allModels = require('../utilities/allModels');
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
   const cookie = req.cookies?.[process.env.cookie_name];
@@ -48,5 +50,19 @@ exports.onlyLoggedIn = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+exports.beforeAction = function (ModelName = '') {
+  return async (req, res, next) => {
+    const { id } = req.body;
+    if (!id || !ModelName) return next(new AppError(`${ModelName || '<ModelName>'} not found with id: ${id}`, 404));
+
+    const model = await allModels[ModelName].findById(id);
+    if (!model) return next(new AppError(`${ModelName} not found with id: ${id}`));
+
+    const modelNameLower = ModelName.toLowerCase();
+    req[modelNameLower] = model;
+    next();
+  };
+};
 
 exports.attatchFileToReqBody = multer({ storage: multer.memoryStorage() }).single('image');

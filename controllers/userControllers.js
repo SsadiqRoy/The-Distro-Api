@@ -56,10 +56,10 @@ exports.update = catchAsync(async (req, res, next) => {
   const body = { surname, otherNames, email, updatedAt: Date.now() };
 
   if (req.file) {
-    const filename = await uploadAdminImage(req.file, req.user.id);
+    const filename = await uploadImage({ file: req.file, suffix: req.user.id });
     body.image = filename;
 
-    req.user.image && (await deleteAdminImage(req.user.image));
+    req.user.image && (await deleteImage(req.user.image));
   }
 
   const user = await User.findByIdAndUpdate(req.user.id, body, { new: true, runValidators: true });
@@ -97,9 +97,12 @@ exports.users = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    length: data.length,
     data,
   });
 });
+
+//
 
 exports.oneUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);

@@ -4,11 +4,11 @@ class AppError extends Error {
 
     this.status = String(statusCode).startsWith('4') ? 'failed' : 'error';
     this.statusCode = statusCode;
-    this._message = message;
     this.isOperational = true;
     this.targetUrl = url;
     this.textCode = textCode;
     this.errorCode = errorCode;
+    this._message = message;
 
     Error.captureStackTrace(this, this.constructor);
   }

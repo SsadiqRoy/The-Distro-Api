@@ -8,13 +8,13 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-dotenv.config({ path: path.join(__dirname, './config.env') });
+dotenv.config({ path: path.join(__dirname, 'config.env') });
 
 async function connectDB() {
   try {
     await mongoose.connect(process.env.db, {
       dbName: 'The-Distro',
-      // rejectUnauthorized: true,
+      rejectUnauthorized: true,
     });
 
     console.log('👉 Database connected');
@@ -27,7 +27,7 @@ connectDB();
 
 const app = require('./app');
 
-const server = app.listen(process.env.PORT, process.env.HOST, () => console.log('👍 The Distro Server Started...'));
+const server = app.listen(process.env.PORT, process.env.HOST, () => console.log(`👍 The Distro Server Started at ${process.env.PORT}...`));
 
 process.on('unhandledRejection', (reason) => {
   console.log('🔥🔥 Unhandled Rejection', reason);
