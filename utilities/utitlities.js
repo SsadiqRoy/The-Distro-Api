@@ -19,3 +19,10 @@ exports.randomAlphaNum = (length) => {
   const values = this.randomFromArray(ALPHA_NUM_LOWER, length);
   return values.join('');
 };
+
+exports.formatAmount = (value, currency = 'usd') => {
+  value = value / 100;
+  const format = new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(value);
+
+  return format;
+};

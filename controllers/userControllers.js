@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const { catchAsync } = require('../utilities/utitlities');
 const User = require('../models/userModel');
-const { uploadAdminImage, deleteAdminImage } = require('../utilities/supportControllers');
+const { uploadAdminImage, deleteAdminImage, filterQuery } = require('../utilities/supportControllers');
 const AppError = require('../classes/AppError');
 
 //
@@ -93,11 +93,11 @@ exports.changePassword = catchAsync(async (req, res, next) => {
 //
 
 exports.users = catchAsync(async (req, res, next) => {
-  const data = await User.find();
+  const { data, meta } = await filterQuery(User, req.query);
 
   res.status(200).json({
     status: 'success',
-    length: data.length,
+    meta,
     data,
   });
 });

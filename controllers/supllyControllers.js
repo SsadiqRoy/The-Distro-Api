@@ -1,7 +1,15 @@
 const AppError = require('../classes/AppError');
 const Product = require('../models/productModel');
 const Supply = require('../models/supplyModel');
+const Wallet = require('../models/walletModel');
+const { getWallet, acceptSupplyResponse, filterQuery } = require('../utilities/supportControllers');
 const { catchAsync } = require('../utilities/utitlities');
+
+//
+
+//
+
+//
 
 exports.request = catchAsync(async (req, res, next) => {
   const { product: productId, quantity } = req.body;
@@ -45,9 +53,8 @@ exports.acceptance = catchAsync(async (req, res, next) => {
   if (!active) return next(new AppError(`Supply has been ${accepted ? 'accepted' : 'canceled'}`, 401));
   if (!supplierApproved) return next(new AppError('Supplier has not approved request', 401));
 
+  if (requesterAccepted) await acceptSupplyResponse(req.supply);
   const supply = await Supply.findByIdAndUpdate(id, { requesterAccepted, active: false, acceptedAt: new Date() }, { new: true });
-
-  requesterAccepted && (await Product.findByIdAndUpdate(supply.product, { buyingPrice: supply.newPrice, $inc: { quantity: supply.quantity } }));
 
   res.status(200).json({
     status: 'success',
@@ -87,12 +94,13 @@ exports.changePrice = catchAsync(async (req, res, next) => {
 //
 
 exports.allSupplies = catchAsync(async (req, res, next) => {
-  const supplies = await Supply.find().sort('-createdAt');
+  // const supplies = await Supply.find().sort('-createdAt');
+  const { data, meta } = await filterQuery(Supply, req.query);
 
   res.status(200).json({
     status: 'success',
-    length: supplies.length,
-    data: supplies,
+    meta,
+    data,
   });
 });
 

@@ -53,12 +53,12 @@ exports.update = catchAsync(async (req, res, next) => {
 //
 
 exports.allPurchases = catchAsync(async (req, res, next) => {
-  const purchases = await Purchase.find().sort('-createdAt');
+  const { data, meta } = await filterQuery(Purchase, req.query);
 
   res.status(200).json({
     status: 'success',
-    length: purchases.length,
-    data: purchases,
+    meta,
+    data,
   });
 });
 

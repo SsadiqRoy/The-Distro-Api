@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema(
     color: { type: String, required: [true, 'Color is required'] },
     buyingPrice: { type: Number, required: [true, 'Buying price is required'], default: 0 },
     sellingPrice: { type: Number, required: [true, 'Selling price is required'], default: 0 },
-    quantity: { type: Number, required: [true, 'Quantity is required'], min: 1 },
+    quantity: { type: Number, required: [true, 'Quantity is required'], default: 0 },
     description: String,
 
     addedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },

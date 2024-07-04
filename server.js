@@ -22,7 +22,6 @@ async function connectDB() {
     console.log('🔥🔥 Database connection error', error);
   }
 }
-
 connectDB();
 
 const app = require('./app');

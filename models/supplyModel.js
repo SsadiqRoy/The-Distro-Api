@@ -20,6 +20,10 @@ const supplySchema = new mongoose.Schema(
   }
 );
 
+supplySchema.virtual('totalPrice').get(function () {
+  if (this.newPrice && this.quantity) return this.newPrice * this.quantity;
+});
+
 supplySchema.pre('save', function () {
   if (this.isNew) this.createdAt = new Date();
 });

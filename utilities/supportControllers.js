@@ -8,6 +8,9 @@ const Purchase = require('../models/purchaseModel');
 const Supply = require('../models/supplyModel');
 const User = require('../models/userModel');
 const Wallet = require('../models/walletModel');
+const AppError = require('../classes/AppError');
+const { formatAmount } = require('./utitlities');
+const QueryFeatures = require('../classes/QueryFeatures');
 
 exports.allModels = { User, Product, Supply, Purchase };
 
@@ -49,8 +52,36 @@ exports.approvePurchase = async (purchase) => {
 
 //
 
+exports.acceptSupplyResponse = async (supply) => {
+  const { balance, id: walletId } = await this.getWallet();
+  const total = supply.newPrice * supply.quantity;
+
+  if (total >= balance)
+    throw new AppError(
+      `Not enough fund. Balance: ${formatAmount(balance)} Cost: ${formatAmount(total)}. Need: ${formatAmount(total - balance)} more.`
+    );
+
+  await Product.findByIdAndUpdate(supply.product, { buyingPrice: supply.newPrice, $inc: { quantity: supply.quantity } });
+  await Wallet.findByIdAndUpdate(walletId, { $inc: { balance: -total } });
+};
+
+//
+
 exports.getWallet = async () => {
   const wallet = (await Wallet.find())[0];
 
   return wallet;
+};
+
+//
+
+exports.makeSupplyRequest = async (body) => {
+  const supply = await Supply.create(body);
+  return supply;
+};
+
+//
+
+exports.filterQuery = async (Schema, query) => {
+  return await new QueryFeatures(Schema, query).execute();
 };
