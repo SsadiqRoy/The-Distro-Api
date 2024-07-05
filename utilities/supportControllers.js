@@ -31,6 +31,8 @@ exports.uploadImage = async ({ file, suffix, folder = 'admins' }) => {
 //
 
 exports.deleteImage = async (filename, folder = 'admins') => {
+  if (filename.startsWith('default')) return true;
+
   await promisify(unlink)(path.join(__dirname, `../public/images/${folder}/${filename}`));
   return true;
 };

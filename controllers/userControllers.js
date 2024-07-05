@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const { catchAsync } = require('../utilities/utitlities');
 const User = require('../models/userModel');
-const { uploadAdminImage, deleteAdminImage, filterQuery } = require('../utilities/supportControllers');
+const { filterQuery, uploadImage, deleteImage } = require('../utilities/supportControllers');
 const AppError = require('../classes/AppError');
 
 //
@@ -30,16 +30,16 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select('+password');
   if (!user) throw new AppError('Email or password is incorrect', 406);
 
-  const compare = await bcrypt.compare(password, user.password);
-  if (!compare) throw new AppError('Email or password is incorrect', 406);
+  const samePassword = await bcrypt.compare(password, user.password);
+  if (!samePassword) throw new AppError('Email or password is incorrect', 406);
 
   const token = jwt.sign({ id: user.id }, process.env.jwt_secrete_key, { expiresIn: process.env.jwt_expires, issuer: process.env.jwt_issuer });
 
   res.cookie(process.env.cookie_name, token, {
-    httpOnly: true,
     expires: new Date(Date.now() + +process.env.cookie_expires),
-    secure: true,
     doman: process.env.cookie_domain,
+    httpOnly: true,
+    secure: true,
   });
 
   res.status(200).json({
@@ -47,6 +47,24 @@ exports.login = catchAsync(async (req, res, next) => {
     message: `Welcome back ${user.otherNames}`,
     data: user,
   });
+});
+
+//
+
+exports.logout = catchAsync(async (req, res, next) => {
+  res.cookie(process.env.cookie_name, '', {
+    expires: new Date(Date.now() - 10),
+    domain: process.env.cookie_domain,
+    secure: true,
+    httpOnly: true,
+  });
+
+  setTimeout(() => {
+    res.status(200).json({
+      status: 'success',
+      message: `You have successfully logged out`,
+    });
+  }, 1000);
 });
 
 //
@@ -77,11 +95,13 @@ exports.changePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
 
   const user = await User.findById(req.user.id).select('+password');
-  const compare = await bcrypt.compare(currentPassword, user.password);
+  const samePassword = await bcrypt.compare(currentPassword, user.password);
 
-  if (!compare) return next(new AppError('Current password is not correct', 406));
+  if (!samePassword) return next(new AppError('Current password is not correct', 406));
 
-  const newuser = await user.save({ password: currentPassword, passwordChangedAt: Date.now() });
+  user.password = newPassword;
+  user.passwordChangedAt = new Date();
+  const newuser = await user.save();
 
   res.status(200).json({
     status: 'success',
@@ -110,5 +130,13 @@ exports.oneUser = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: user,
+  });
+});
+
+//
+
+exports.mySelf = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    data: req.user,
   });
 });

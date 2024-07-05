@@ -10,6 +10,8 @@ router.patch('/login', controller.login);
 router.use(onlyLoggedIn);
 router.route('/').post(controller.newUser).get(controller.users).patch(attatchFileToReqBody, controller.update);
 router.patch('/change-password', controller.changePassword);
+router.get('/myself', controller.mySelf);
+router.get('/logout', controller.logout);
 router.get('/:id', controller.oneUser);
 
 module.exports = router;
