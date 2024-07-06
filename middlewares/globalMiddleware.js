@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const { catchAsync } = require('../utilities/utitlities');
 const multer = require('multer');
-const AppError = require('../classes/AppError');
+const AppError = require('../utilities/classes/AppError');
 const { allModels } = require('../utilities/supportControllers');
 // const allModels = require('../utilities/allModels');
 

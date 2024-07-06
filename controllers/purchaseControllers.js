@@ -1,4 +1,4 @@
-const AppError = require('../classes/AppError');
+const AppError = require('../utilities/classes/AppError');
 const Purchase = require('../models/purchaseModel');
 const { approvePurchase } = require('../utilities/supportControllers');
 const { catchAsync, randomAlphaNum } = require('../utilities/utitlities');

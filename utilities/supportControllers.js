@@ -8,9 +8,9 @@ const Purchase = require('../models/purchaseModel');
 const Supply = require('../models/supplyModel');
 const User = require('../models/userModel');
 const Wallet = require('../models/walletModel');
-const AppError = require('../classes/AppError');
+const AppError = require('./classes/AppError');
 const { formatAmount } = require('./utitlities');
-const QueryFeatures = require('../classes/QueryFeatures');
+const QueryFeatures = require('./classes/QueryFeatures');
 
 exports.allModels = { User, Product, Supply, Purchase };
 

@@ -1,5 +1,5 @@
-const AppError = require('../classes/AppError');
-const TPH = require('./thirdPartyHandlers');
+const AppError = require('./classes/AppError');
+const TPH = require('./thirdparties/thirdPartyHandlers');
 
 const localErrorTypes = {
   types: ['objectId', 'uniqueField', 'minLength'],

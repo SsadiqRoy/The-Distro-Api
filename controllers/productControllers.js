@@ -1,4 +1,4 @@
-const AppError = require('../classes/AppError');
+const AppError = require('../utilities/classes/AppError');
 const Product = require('../models/productModel');
 const { uploadImage, deleteImage, makeSupplyRequest, filterQuery } = require('../utilities/supportControllers');
 const { catchAsync } = require('../utilities/utitlities');
@@ -18,7 +18,7 @@ exports.newProduct = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'New product added',
+    message: `New product, ${product.name} added`,
     data: product,
   });
 });
@@ -26,8 +26,8 @@ exports.newProduct = catchAsync(async (req, res, next) => {
 //
 
 exports.update = catchAsync(async (req, res, next) => {
-  const { id, name, color, buyingPrice, sellingPrice, quantity, description } = req.body;
-  const body = { name, color, buyingPrice, sellingPrice, quantity, description };
+  const { id, color, sellingPrice, description } = req.body;
+  const body = { color, sellingPrice, description };
 
   if (req.file) {
     const currentProduct = await Product.findById(id);
@@ -41,7 +41,7 @@ exports.update = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'New product added',
+    message: `${product.name} has been updated`,
     data: product,
   });
 });

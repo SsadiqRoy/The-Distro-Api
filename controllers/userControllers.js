@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { catchAsync } = require('../utilities/utitlities');
 const User = require('../models/userModel');
 const { filterQuery, uploadImage, deleteImage } = require('../utilities/supportControllers');
-const AppError = require('../classes/AppError');
+const AppError = require('../utilities/classes/AppError');
 
 //
 

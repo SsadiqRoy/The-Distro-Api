@@ -20,6 +20,7 @@ class QueryFeatures {
     const total = await this.#Schema.countDocuments(this.#filterQuery);
 
     this.#meta.total = total;
+    this.#meta.previous = this.#meta.consumed;
     this.#meta.consumed = this.#meta.consumed + query.length;
     this.#meta.available = total - this.#meta.consumed;
     this.#meta.length = query.length;

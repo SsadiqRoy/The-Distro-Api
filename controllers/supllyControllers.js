@@ -1,4 +1,4 @@
-const AppError = require('../classes/AppError');
+const AppError = require('../utilities/classes/AppError');
 const Product = require('../models/productModel');
 const Supply = require('../models/supplyModel');
 const Wallet = require('../models/walletModel');
@@ -94,7 +94,6 @@ exports.changePrice = catchAsync(async (req, res, next) => {
 //
 
 exports.allSupplies = catchAsync(async (req, res, next) => {
-  // const supplies = await Supply.find().sort('-createdAt');
   const { data, meta } = await filterQuery(Supply, req.query);
 
   res.status(200).json({

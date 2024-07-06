@@ -24,6 +24,13 @@ async function connectDB() {
 }
 connectDB();
 
+/*
+
+
+
+
+*/
+
 const app = require('./app');
 
 const server = app.listen(process.env.PORT, process.env.HOST, () => console.log(`👍 The Distro Server Started at ${process.env.PORT}...`));
