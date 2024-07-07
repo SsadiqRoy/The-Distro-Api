@@ -5,11 +5,11 @@ const Wallet = require('../models/walletModel');
 const { getWallet, acceptSupplyResponse, filterQuery } = require('../utilities/supportControllers');
 const { catchAsync } = require('../utilities/utitlities');
 
-//
+/*
 
-//
 
-//
+
+*/
 
 exports.request = catchAsync(async (req, res, next) => {
   const { product: productId, quantity } = req.body;
@@ -68,7 +68,7 @@ exports.acceptance = catchAsync(async (req, res, next) => {
 exports.cancelation = catchAsync(async (req, res, next) => {
   const { id } = req.body;
 
-  const supply = await Supply.findByIdAndUpdate(id, { active: false }, { new: true });
+  const supply = await Supply.findByIdAndUpdate(id, { active: false, acceptedAt: new Date() }, { new: true });
 
   res.status(200).json({
     status: 'success',
@@ -94,6 +94,7 @@ exports.changePrice = catchAsync(async (req, res, next) => {
 //
 
 exports.allSupplies = catchAsync(async (req, res, next) => {
+  req.query.populate = [{ path: 'product', select: 'name image buyingPrice' }];
   const { data, meta } = await filterQuery(Supply, req.query);
 
   res.status(200).json({
