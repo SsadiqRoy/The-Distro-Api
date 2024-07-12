@@ -11,6 +11,7 @@ const Wallet = require('../models/walletModel');
 const AppError = require('./classes/AppError');
 const { formatAmount } = require('./utitlities');
 const QueryFeatures = require('./classes/QueryFeatures');
+const AggregationQuery = require('./classes/AggregationQueryFeature');
 
 exports.allModels = { User, Product, Supply, Purchase };
 
@@ -50,6 +51,8 @@ exports.approvePurchase = async (purchase) => {
 
   await Product.findByIdAndUpdate(purchase.product, { $inc: { quantity: -Number(purchase.quantity) } });
   await Wallet.findByIdAndUpdate(wallet.id, { $inc: { balance: total } });
+
+  return product;
 };
 
 //
@@ -86,4 +89,8 @@ exports.makeSupplyRequest = async (body) => {
 
 exports.filterQuery = async (Schema, query) => {
   return await new QueryFeatures(Schema, query).execute();
+};
+
+exports.aggregationQuery = async (Schema, query, stages) => {
+  return await new AggregationQuery(Schema, query, stages).execute();
 };

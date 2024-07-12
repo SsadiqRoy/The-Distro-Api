@@ -25,6 +25,7 @@ class QueryFeatures {
     this.#meta.available = total - this.#meta.consumed;
     this.#meta.length = query.length;
     delete this.#meta.searchFields;
+    delete this.#meta.populate;
 
     return { data: query, meta: this.#meta };
   }
@@ -88,7 +89,7 @@ class QueryFeatures {
 
   #paginate() {
     const page = +this.#query.page || 1;
-    const limit = +this.#query.limit || 2;
+    const limit = +this.#query.limit || 10;
     const skip = (page - 1) * limit;
     this.#model.skip(skip).limit(limit);
 

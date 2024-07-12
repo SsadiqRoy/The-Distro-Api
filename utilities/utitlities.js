@@ -26,3 +26,13 @@ exports.formatAmount = (value, currency = 'usd') => {
 
   return format;
 };
+
+exports.isDate = (value) => {
+  try {
+    new Date(value).toISOString();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

@@ -1,18 +1,7 @@
 const AppError = require('../utilities/classes/AppError');
 const Purchase = require('../models/purchaseModel');
-const { approvePurchase } = require('../utilities/supportControllers');
+const { approvePurchase, filterQuery } = require('../utilities/supportControllers');
 const { catchAsync, randomAlphaNum } = require('../utilities/utitlities');
-
-/* =============== ACTIVITIES 
-  - Making purchase
-  - Declining purchase
-    * Can not decline when approved
-  - Approving purchase
-    * Can not approve when declined
-
-  - Getting all purchases
-  - Gettin one purchase
-*/
 
 exports.newPurchase = catchAsync(async (req, res, next) => {
   const { product, quantity, price } = req.body;
@@ -36,8 +25,13 @@ exports.update = catchAsync(async (req, res, next) => {
   if (req.purchase.status === 'declined') return next(new AppError(`Purchase #${req.purchase.purchaseId} has already been declined`));
   if (status === 'pending') return next(new AppError('You can not set status to pending', 406));
 
-  if (status === 'approved') await approvePurchase(req.purchase);
-  const purchase = await Purchase.findByIdAndUpdate(id, { status, statusChangedAt: new Date() }, { new: true, runValidators: true });
+  const updateBody = { status, statusChangedAt: new Date() };
+
+  if (status === 'approved') {
+    const product = await approvePurchase(req.purchase);
+    updateBody.basePrice = product.buyingPrice;
+  }
+  const purchase = await Purchase.findByIdAndUpdate(id, updateBody, { new: true, runValidators: true });
 
   let message;
   if (status === 'approved') message = `You have successfully approve purchase #${purchase.purchaseId}`;
@@ -53,6 +47,8 @@ exports.update = catchAsync(async (req, res, next) => {
 //
 
 exports.allPurchases = catchAsync(async (req, res, next) => {
+  req.query.populate = [{ path: 'product', select: 'name image quantity buyingPrice sellingPrice' }];
+
   const { data, meta } = await filterQuery(Purchase, req.query);
 
   res.status(200).json({

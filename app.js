@@ -20,6 +20,7 @@ const productRoutes = require('./routes/productRoutes');
 const supplyRoutes = require('./routes/supplyRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const walletRoutes = require('./routes/walletRoutes');
+const zeroRoutes = require('./routes/zeroRoutes');
 
 app.use(isLoggedIn);
 app.use('/api/admins', userRoutes);
@@ -27,6 +28,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/supplies', supplyRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/wallet', walletRoutes);
+app.use('/api/zero', zeroRoutes);
 
 app.use('*', (req, res) => {
   res.status(404).json({

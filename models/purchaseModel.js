@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const purchaseSchema = new mongoose.Schema(
   {
     product: { type: mongoose.Schema.ObjectId, ref: 'Product' },
+    basePrice: { type: Number, default: 0 },
     price: { type: Number, required: [true, 'Product cost is required'] },
     quantity: { type: Number, min: 1, required: [true, 'Quantity of products is required'] },
     status: { type: String, enum: ['pending', 'approved', 'declined'], default: 'pending' },
@@ -19,6 +20,9 @@ const purchaseSchema = new mongoose.Schema(
 
 purchaseSchema.virtual('totalPrice').get(function () {
   return this.price * this.quantity;
+});
+purchaseSchema.virtual('profit').get(function () {
+  return this.price * this.quantity - this.basePrice * this.quantity;
 });
 
 purchaseSchema.pre('save', function () {

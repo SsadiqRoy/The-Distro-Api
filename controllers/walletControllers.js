@@ -1,4 +1,3 @@
-const Wallet = require('../models/walletModel');
 const { getWallet } = require('../utilities/supportControllers');
 const { catchAsync } = require('../utilities/utitlities');
 
