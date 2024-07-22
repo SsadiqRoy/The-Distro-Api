@@ -15,6 +15,8 @@ async function connectDB() {
     await mongoose.connect(process.env.db, {
       dbName: 'The-Distro',
       rejectUnauthorized: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
     });
 
     console.log('👉 Database connected');
@@ -33,7 +35,9 @@ connectDB();
 
 const app = require('./app');
 
-const server = app.listen(process.env.PORT, process.env.HOST, () => console.log(`👍 The Distro Server Started at ${process.env.PORT}...`));
+const server = app.listen(process.env.PORT, process.env.HOST, () =>
+  console.log(`👍 The Distro Server Started at ${process.env.PORT}...`)
+);
 
 process.on('unhandledRejection', (reason) => {
   console.log('🔥🔥 Unhandled Rejection', reason);
