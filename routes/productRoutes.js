@@ -5,12 +5,12 @@ const { onlyLoggedIn, attatchFileToReqBody, beforeAction } = require('../middlew
 
 const router = express.Router();
 
+router.get(controller.allProducts);
 router.use(onlyLoggedIn);
 router
   .route('/')
   .post(attatchFileToReqBody, controller.newProduct)
-  .patch(attatchFileToReqBody, beforeAction('Product'), controller.update)
-  .get(controller.allProducts);
+  .patch(attatchFileToReqBody, beforeAction('Product'), controller.update);
 
 router.get('/:id', controller.oneProduct);
 
