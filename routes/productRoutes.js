@@ -5,7 +5,8 @@ const { onlyLoggedIn, attatchFileToReqBody, beforeAction } = require('../middlew
 
 const router = express.Router();
 
-router.get(controller.allProducts);
+router.get('/', controller.allProducts);
+
 router.use(onlyLoggedIn);
 router
   .route('/')
