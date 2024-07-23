@@ -22,6 +22,10 @@ const purchaseRoutes = require('./routes/purchaseRoutes');
 const walletRoutes = require('./routes/walletRoutes');
 const zeroRoutes = require('./routes/zeroRoutes');
 
+app.get('/', (req, res) => {
+  res.redirect('/api/products');
+});
+
 app.use(isLoggedIn);
 app.use('/api/admins', userRoutes);
 app.use('/api/products', productRoutes);
