@@ -33,13 +33,17 @@ exports.login = catchAsync(async (req, res, next) => {
   const samePassword = await bcrypt.compare(password, user.password);
   if (!samePassword) throw new AppError('Email or password is incorrect', 406);
 
-  const token = jwt.sign({ id: user.id }, process.env.jwt_secrete_key, { expiresIn: process.env.jwt_expires, issuer: process.env.jwt_issuer });
+  const token = jwt.sign({ id: user.id }, process.env.jwt_secrete_key, {
+    expiresIn: process.env.jwt_expires,
+    issuer: process.env.jwt_issuer,
+  });
 
   res.cookie(process.env.cookie_name, token, {
     expires: new Date(Date.now() + +process.env.cookie_expires),
     doman: process.env.cookie_domain,
     httpOnly: true,
     secure: true,
+    sameSite: 'none',
   });
 
   res.status(200).json({
