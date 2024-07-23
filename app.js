@@ -5,7 +5,7 @@ const cors = require('cors');
 const path = require('node:path');
 
 const app = express();
-const origin = ['http://localhost:5173'];
+const origin = ['http://localhost:5173', 'https://the-distro.vercel.app'];
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
