@@ -12,12 +12,10 @@ dotenv.config({ path: path.join(__dirname, 'config.env') });
 
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.db, {
-      dbName: 'The-Distro',
-      rejectUnauthorized: true,
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    });
+    await mongoose.connect(process.env.db, { dbName: 'The-Distro'});
+      // rejectUnauthorized: true,
+      // useUnifiedTopology: true,
+      // useNewUrlParser: true,
 
     console.log('👉 Database connected');
   } catch (error) {
