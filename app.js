@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors({ origin, credentials: true }));
+app.use(cors({ credentials: true }));
 // app.use(cors({ origin: '*', credentials: true }));
 
 const globalError = require('./utilities/globalError');
